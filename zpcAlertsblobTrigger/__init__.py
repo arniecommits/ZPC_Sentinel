@@ -3,7 +3,7 @@ import json
 import azure.functions as func
 import logging
 from azure.storage.blob import BlobServiceClient, BlobClient
-import time
+import datetime
 import hmac
 import hashlib
 import base64
@@ -38,12 +38,13 @@ def get_shared_key ():
         resource_group_name=az_rg_name,
         workspace_name=az_workspace_name
     )
+    response = response.primary_shared_key
     return response
 
 def send_aw(json_data,key):
     
     endpoint = f'https://{az_workspace_id}.ods.opinsights.azure.com/api/logs?api-version={api_version}'
-    timestamp = str(int(time.time()))
+    timestamp = datetime.datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
     string_to_sign = f'{timestamp}{json_data}'
     signature = base64.b64encode(hmac.new(base64.b64decode(key), msg=string_to_sign.encode('utf-8'), digestmod=hashlib.sha256).digest()).decode()
     headers = {
