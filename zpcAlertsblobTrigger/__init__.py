@@ -55,8 +55,8 @@ def main(myblob: func.InputStream):
             json_content = json.loads(line)
             dict_list.append(json_content)
     json_data_all = json.dumps(dict_list)        
-    logging.info(f'JSON Object from Blob: {json_data_all}')
-    #send_aw(az_workspace_id,shared_key,json_content,log_type)
+    logging.info(f'Following events are being pushed to logs: {json_data_all}')
+    send_aw(az_workspace_id,shared_key,json_data_all,log_type)
             
 
 def get_shared_key ():
@@ -79,7 +79,6 @@ def build_signature(WORKSPACE_ID, WORKSPACE_SHARED_KEY, date, content_length, me
     decoded_key = base64.b64decode(WORKSPACE_SHARED_KEY)
     encoded_hash = base64.b64encode(hmac.new(decoded_key, bytes_to_hash, digestmod=hashlib.sha256).digest()).decode()
     authorization = f"SharedKey {WORKSPACE_ID}:{encoded_hash}"
-    logging.info(f'Auth info : {authorization}')
     return authorization
 
 def send_aw(WORKSPACE_ID, WORKSPACE_SHARED_KEY, body, LOG_TYPE):
