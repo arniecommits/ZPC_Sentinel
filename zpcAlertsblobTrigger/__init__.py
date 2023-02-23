@@ -72,6 +72,6 @@ def send_aw(WORKSPACE_ID, WORKSPACE_SHARED_KEY, body, LOG_TYPE):
         logging.info('Sent data successfully to Log Analytics Workspace')
         return True
     else:
-        logging.error(f'Response code: {response.status_code}')
+        logging.error(f'Response code: {response.status_code} Response : {response.text}')
     
     
