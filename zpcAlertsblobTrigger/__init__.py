@@ -25,7 +25,7 @@ def main(myblob: func.InputStream):
     object_contents = blob_bytes.decode('utf-8')
     for line in object_contents.splitlines():
             json_content = json.loads(line)
-            send_aw(json_content,shared_key)
+            send_aw(az_workspace_id,shared_key,json_content,log_type)
             #logging.info(json_content)
 
 def get_shared_key ():
@@ -41,21 +41,37 @@ def get_shared_key ():
     response = response.primary_shared_key
     return response
 
-def send_aw(json_data,key):
-    
-    endpoint = f'https://{az_workspace_id}.ods.opinsights.azure.com/api/logs?api-version={api_version}'
-    timestamp = datetime.datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
-    string_to_sign = f'{timestamp}{json_data}'
-    signature = base64.b64encode(hmac.new(base64.b64decode(key), msg=string_to_sign.encode('utf-8'), digestmod=hashlib.sha256).digest()).decode()
-    headers = {
-        'Content-Type': 'application/json',
-        'Log-Type': log_type,
-        'Authorization': f'SharedKey {az_workspace_id}:{signature}',
-        'x-ms-date': timestamp,
-    }
-    response = requests.post(endpoint, data=json_data, headers=headers)
-    if response.status_code == 200:
-        logging.info('Data sent successfully to Log Analytics workspace')
-    else:
-        logging.info(f'Error sending data to Log Analytics workspace: {response.status_code} - {response.content}')
+def build_signature(WORKSPACE_ID, WORKSPACE_SHARED_KEY, date, content_length, method, content_type, resource):
+    x_headers = 'x-ms-date:' + date
+    string_to_hash = method + "\n" + str(content_length) + "\n" + content_type + "\n" + x_headers + "\n" + resource
+    bytes_to_hash = bytes(string_to_hash, encoding="utf-8") 
+    decoded_key = base64.b64decode(WORKSPACE_SHARED_KEY)
+    encoded_hash = base64.b64encode(hmac.new(decoded_key, bytes_to_hash, digestmod=hashlib.sha256).digest()).decode()
+    authorization = f"SharedKey {WORKSPACE_ID}:{encoded_hash}"
+    return authorization
 
+def send_aw(WORKSPACE_ID, WORKSPACE_SHARED_KEY, body, LOG_TYPE):
+    method = 'POST'
+    content_type = 'application/json'
+    resource = '/api/logs'
+    rfc1123date = datetime.datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
+    content_length = len(body)
+    signature = build_signature(WORKSPACE_ID, WORKSPACE_SHARED_KEY, rfc1123date, content_length, method, content_type, resource)
+    uri = 'https://' + WORKSPACE_ID + '.ods.opinsights.azure.com' + resource + '?api-version=2016-04-01'
+
+    headers = {
+        'content-type': content_type,
+        'Authorization': signature,
+        'Log-Type': LOG_TYPE,
+        'x-ms-date': rfc1123date
+    }
+
+    logging.info(f'Sending {content_length} bytes')
+    response = requests.post(uri,data=body, headers=headers)
+    if (response.status_code >= 200 and response.status_code <= 299):
+        logging.info('Sent data successfully to Log Analytics Workspace')
+        return True
+    else:
+        logging.error(f'Response code: {response.status_code}')
+    
+    
