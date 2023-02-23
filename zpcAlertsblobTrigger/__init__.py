@@ -38,7 +38,6 @@ def get_shared_key ():
         resource_group_name=az_rg_name,
         workspace_name=az_workspace_name
     )
-    logging.info(f'Shared Key :{response}')
     return response
 
 def send_aw(json_data,key):
@@ -57,5 +56,5 @@ def send_aw(json_data,key):
     if response.status_code == 200:
         logging.info('Data sent successfully to Log Analytics workspace')
     else:
-        logging.error(f'Error sending data to Log Analytics workspace: {response.status_code} - {response.content}')
+        logging.info(f'Error sending data to Log Analytics workspace: {response.status_code} - {response.content}')
 
