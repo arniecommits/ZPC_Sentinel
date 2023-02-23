@@ -8,6 +8,8 @@ from azure.storage.blob import BlobServiceClient, BlobClient
 
 def main(myblob: func.InputStream):
     blob_bytes = myblob.read()
-    blob_string = blob_bytes.decode('utf-8')
-    data = json.loads(blob_string)
-    logging.info(f"Got data: {data}")
+    object_contents = blob_bytes.decode('utf-8')
+    for line in object_contents.splitlines():
+            json_content = json.loads(line)
+            logging.info(json_content)
+    
