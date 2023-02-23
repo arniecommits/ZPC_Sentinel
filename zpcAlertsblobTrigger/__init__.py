@@ -1,9 +1,13 @@
 import logging
-
+import json
 import azure.functions as func
+import logging
+from azure.storage.blob import BlobServiceClient, BlobClient
+
 
 
 def main(myblob: func.InputStream):
-    logging.info(f"Python blob trigger function processed blob \n"
-                 f"Name: {myblob.read}\n"
-                 f"Blob Size: {myblob.length} bytes")
+    blob_bytes = myblob.read()
+    blob_string = blob_bytes.decode('utf-8')
+    data = json.loads(blob_string)
+    logging.info(f"Got data: {data}")
