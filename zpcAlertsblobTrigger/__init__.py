@@ -53,7 +53,7 @@ def main(myblob: func.InputStream):
     for line in object_contents.splitlines():
             json_content = json.loads(line)
             logging.info(f'JSON Object from Blob: {json_content}')
-            send_aw(az_workspace_id,shared_key,body,log_type)
+    send_aw(az_workspace_id,shared_key,body,log_type)
             
 
 def get_shared_key ():
