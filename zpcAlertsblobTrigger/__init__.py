@@ -18,6 +18,33 @@ az_sub_id ='d3064f82-30cf-4e0e-b27f-e6c5fddbc9b2'
 az_rg_name = 'rg-arnab-lab'
 api_version = '2016-04-01'
 
+json_data = [{
+   "slot_ID": 12345,
+    "ID": "5cdad72f-c848-4df0-8aaa-ffe033e75d57",
+    "availability_Value": 100,
+    "performance_Value": 6.954,
+    "measurement_Name": "last_one_hour",
+    "duration": 3600,
+    "warning_Threshold": 0,
+    "critical_Threshold": 0,
+    "IsActive": "true"
+},
+{   
+    "slot_ID": 67890,
+    "ID": "b6bee458-fb65-492e-996d-61c4d7fbb942",
+    "availability_Value": 100,
+    "performance_Value": 3.379,
+    "measurement_Name": "last_one_hour",
+    "duration": 3600,
+    "warning_Threshold": 0,
+    "critical_Threshold": 0,
+    "IsActive": "false"
+}]
+body = json.dumps(json_data)
+
+
+
+
 
 def main(myblob: func.InputStream):
     shared_key = get_shared_key()
@@ -25,8 +52,9 @@ def main(myblob: func.InputStream):
     object_contents = blob_bytes.decode('utf-8')
     for line in object_contents.splitlines():
             json_content = json.loads(line)
-            send_aw(az_workspace_id,shared_key,json_content,log_type)
-            #logging.info(json_content)
+            logging.info(f'JSON Object from Blob: {json_content}')
+            send_aw(az_workspace_id,shared_key,json_data,log_type)
+            
 
 def get_shared_key ():
     client = LogAnalyticsManagementClient(
