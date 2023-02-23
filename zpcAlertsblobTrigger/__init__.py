@@ -50,10 +50,13 @@ def main(myblob: func.InputStream):
     shared_key = get_shared_key()
     blob_bytes = myblob.read()
     object_contents = blob_bytes.decode('utf-8')
+    dict_list = []
     for line in object_contents.splitlines():
-            json_content = json.dumps(json.loads(line))
-            logging.info(f'JSON Object from Blob: {json_content}')
-    send_aw(az_workspace_id,shared_key,json_content,log_type)
+            json_content = json.loads(line)
+            dict_list.append(json_content)
+    json_data_all = json.dumps(dict_list)        
+    logging.info(f'JSON Object from Blob: {json_data_all}')
+    #send_aw(az_workspace_id,shared_key,json_content,log_type)
             
 
 def get_shared_key ():
