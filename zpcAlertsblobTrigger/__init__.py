@@ -76,6 +76,7 @@ def build_signature(WORKSPACE_ID, WORKSPACE_SHARED_KEY, date, content_length, me
     decoded_key = base64.b64decode(WORKSPACE_SHARED_KEY)
     encoded_hash = base64.b64encode(hmac.new(decoded_key, bytes_to_hash, digestmod=hashlib.sha256).digest()).decode()
     authorization = f"SharedKey {WORKSPACE_ID}:{encoded_hash}"
+    logging.info(f'Auth info : {authorization}')
     return authorization
 
 def send_aw(WORKSPACE_ID, WORKSPACE_SHARED_KEY, body, LOG_TYPE):
