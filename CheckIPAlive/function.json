@@ -2,10 +2,10 @@
   "scriptFile": "__init__.py",
   "bindings": [
     {
-      "authLevel": "anonymous",
+      "authLevel": "function",
       "type": "httpTrigger",
       "direction": "in",
-      "ipAddr": "req",
+      "name": "req",
       "methods": [
         "get",
         "post"
@@ -14,7 +14,7 @@
     {
       "type": "http",
       "direction": "out",
-      "ipAddr": "$return"
+      "name": "$return"
     }
   ]
 }
