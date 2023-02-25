@@ -14,6 +14,7 @@ isodate==0.6.1
 msal==1.21.0
 msal-extensions==1.0.0
 msrest==0.7.1
+nmap==0.0.1
 oauthlib==3.2.2
 portalocker==2.7.0
 pycparser==2.21
