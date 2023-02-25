@@ -3,7 +3,7 @@ import socket
 import azure.functions as func
 
 
-def ok(req: func.HttpRequest) -> func.HttpResponse:
+def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     name = req.params.get('name')
     ip = name
@@ -31,4 +31,3 @@ def check_open_ports(ip_address):
         return str(open_ports)
     else:
         print("No open ports found on " + ip_address)
-          
