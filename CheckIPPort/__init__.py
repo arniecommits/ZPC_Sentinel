@@ -5,8 +5,8 @@ import azure.functions as func
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-    name = req.params.get('name')
-    ip = name
+    ip = req.get_body()
+    logging.info(f'Got request body {ip}')
     if ip:
         port = check_open_ports(ip)
         if port:
@@ -15,13 +15,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             return func.HttpResponse(body=f'No open ports detected on {ip}',status_code=404)    
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+             f"Request body {ip}",
              status_code=200
         )
 
 def check_open_ports(ip_address):
     open_ports = []
-    for port in range(1, 1024):
+    for port in (22,80,443,8080,3389,1433,1521,135,445,139,53):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(1)
         result = sock.connect_ex((ip_address, port))
