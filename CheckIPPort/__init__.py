@@ -5,7 +5,8 @@ import azure.functions as func
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-    ip = req.get_body()
+    ip = req.get_body().decode('utf8')
+
     logging.info(f'Got request body {ip}')
     if ip:
         port = check_open_ports(ip)
