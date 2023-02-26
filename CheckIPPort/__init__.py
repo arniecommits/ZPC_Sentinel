@@ -26,8 +26,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             return func.HttpResponse(body=json_b,status_code=200)    
     else:
         return func.HttpResponse(
-             "No params passed in request",
-             200
+             body="No params passed in request",
+             status_code=200
         )
 
 async def check_open_ports(ip_address):
