@@ -17,13 +17,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         port = check_open_ports(ip)
         port = str(asyncio.run(port))
         logging.info(f'Ports....... {port}')
-        func.HttpResponse(f'Found the following ports open {port}',200)
+        func.HttpResponse(body=f'Found the following ports open {port}',status_code=200)
         if (port):
-            return func.HttpResponse(port,200)
+            return func.HttpResponse(body=port,status_code=200)
         else:
             json_resp='{"ip_status":"No open ports"}'
             json_b=json.dumps(json_resp)
-            return func.HttpResponse(json_b,200)    
+            return func.HttpResponse(body=json_b,status_code=200)    
     else:
         return func.HttpResponse(
              "No params passed in request",
