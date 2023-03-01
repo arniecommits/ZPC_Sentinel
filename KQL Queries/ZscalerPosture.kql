@@ -1,0 +1,42 @@
+ZscalerPosture_CL
+| where app_s == "AZURE" or app_s == "AWS"
+| summarize count() by src_name_s
+| top 10 by src_name_s
+| render piechart 
+
+
+ZscalerPosture_CL
+| where isnotempty(src_type_s)
+| summarize count() by src_type_s
+| top 10 by src_type_s
+| render piechart 
+
+ZscalerPosture_CL
+| where isnotempty(signature_category_s) | summarize count() by signature_category_s | render piechart 
+
+ZscalerPosture_CL
+| where isnotempty(app_s)
+| summarize count() by app_s, vendor_severity_s
+| render barchart   
+
+ZscalerPosture_CL
+| where isnotempty(signature_s)
+| summarize count() by signature_s
+| top 10 by signature_s
+| render piechart
+
+ZscalerPosture_CL
+| where isnotempty(status_s) | summarize count() by description_s,signature_id_s | render barchart 
+
+
+//Replace the tag that you want to visualise
+ZscalerPosture_CL
+| where isnotempty(parse_json(resource_tags_s).Owner)
+| project tostring(parse_json(resource_tags_s))
+| summarize count() by tostring(parse_json(resource_tags_s).Owner)
+| render barchart
+
+ZscalerPosture_CL
+| where type_s == "IaC"
+| summarize count() by vendor_product_s, signature_category_s
+| render barchart 
