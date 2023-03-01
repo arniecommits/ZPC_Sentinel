@@ -12,9 +12,10 @@ and executes an Azure Function app to push data into the Log Analytics Workspace
 Basic steps:
 
 1. Create a python Linux app
-2. Upload code
-3. Configure a Log Analytics Workspace and obtain workspace id, rg info etc optional map this into Microsoft Sentinel for Incident Management
-4. Configure environment variables as shown in the screenshot, 
+2. Upload the code by creating a workspace in your local machine and leveraging VScode integrations
+3. Assign a managed identity to the function ensure the service principal has read access to azure blobs and write access to log analytics workspace and sentinel
+4. Configure a Log Analytics Workspace and obtain workspace id, rg info etc optional map this into Microsoft Sentinel for Incident Management
+5. Configure environment variables as shown in the screenshot, 
     Blob Trigger requires connection variable to the AZ Storage account, rest of the variables are self explanatory
 
 ## Sentinel SOAR Integration
